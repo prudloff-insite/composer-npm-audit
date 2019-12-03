@@ -1,0 +1,24 @@
+{
+  "name": "insite/composer-npm-audit",
+  "license": "proprietary",
+  "type": "composer-plugin",
+  "description": "",
+  "require": {
+    "composer-plugin-api": "^1.1",
+    "guzzlehttp/guzzle": "^6.4",
+    "fxp/composer-asset-plugin": "^1.4"
+  },
+  "extra": {
+    "class": "ComposerNpmAudit\\NpmAuditPlugin"
+  },
+  "autoload": {
+    "psr-4": {
+      "ComposerNpmAudit\\": "src/"
+    }
+  },
+  "require-dev": {
+    "composer/composer": "^1.9",
+    "ocramius/package-versions": "^1.4",
+    "symfony/var-dumper": "^5.0"
+  }
+}
