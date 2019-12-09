@@ -3,7 +3,6 @@
 namespace ComposerNpmAudit;
 
 use Composer\Command\BaseCommand;
-use Fxp\Composer\AssetPlugin\Converter\NpmPackageUtil;
 use GuzzleHttp\Client;
 use GuzzleHttp\RequestOptions;
 use PackageVersions\Versions;
@@ -11,12 +10,27 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
+/**
+ * Class NpmAuditCommand
+ *
+ * @package ComposerNpmAudit
+ */
 class NpmAuditCommand extends BaseCommand {
 
+  /**
+   *
+   */
   protected function configure() {
     $this->setName('npm-audit');
   }
 
+  /**
+   * Reused from fxp/composer-asset-plugin.
+   *
+   * @param $name
+   *
+   * @return string
+   */
   private static function revertName($name)
   {
     if (false !== strpos($name, '--')) {
@@ -26,6 +40,12 @@ class NpmAuditCommand extends BaseCommand {
     return $name;
   }
 
+  /**
+   * @param \Symfony\Component\Console\Input\InputInterface $input
+   * @param \Symfony\Component\Console\Output\OutputInterface $output
+   *
+   * @return int
+   */
   protected function execute(InputInterface $input, OutputInterface $output) {
     $vendorDir = $this->getComposer()->getConfig()->get('vendor-dir');
     require $vendorDir . '/autoload.php';
