@@ -17,6 +17,15 @@ class NpmAuditCommand extends BaseCommand {
     $this->setName('npm-audit');
   }
 
+  private static function revertName($name)
+  {
+    if (false !== strpos($name, '--')) {
+      $name = '@'.str_replace('--', '/', $name);
+    }
+
+    return $name;
+  }
+
   protected function execute(InputInterface $input, OutputInterface $output) {
     $vendorDir = $this->getComposer()->getConfig()->get('vendor-dir');
     require $vendorDir . '/autoload.php';
@@ -30,7 +39,7 @@ class NpmAuditCommand extends BaseCommand {
       $packageInfo = explode('/', $package);
       $versionInfo = explode('@', $version);
       if ($packageInfo[0] == 'npm-asset') {
-        $name = NpmPackageUtil::revertName($packageInfo[1]);
+        $name = $this->revertName($packageInfo[1]);
         $requires[$name] = $versionInfo[0];
         $dependencies[$name] = [
           'version' => $versionInfo[0],
