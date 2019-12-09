@@ -6,7 +6,8 @@
   "require": {
     "composer-plugin-api": "^1.1",
     "guzzlehttp/guzzle": "^6.4",
-    "fxp/composer-asset-plugin": "^1.4"
+    "fxp/composer-asset-plugin": "^1.4",
+    "ext-json": "*"
   },
   "extra": {
     "class": "ComposerNpmAudit\\NpmAuditPlugin"

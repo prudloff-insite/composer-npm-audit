@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "d3a94a7c5dd5afb76b81a2c6f88035d4",
+    "content-hash": "c3c325c93fe9cc6b601af161cf034d51",
     "packages": [
         {
             "name": "fxp/composer-asset-plugin",
@@ -1490,6 +1490,8 @@
     "stability-flags": [],
     "prefer-stable": false,
     "prefer-lowest": false,
-    "platform": [],
+    "platform": {
+        "ext-json": "*"
+    },
     "platform-dev": []
 }
