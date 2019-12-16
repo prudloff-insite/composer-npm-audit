@@ -6,7 +6,9 @@ use Composer\Command\BaseCommand;
 use GuzzleHttp\Client;
 use GuzzleHttp\RequestOptions;
 use PackageVersions\Versions;
+use stdClass;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
@@ -21,7 +23,8 @@ class NpmAuditCommand extends BaseCommand {
    *
    */
   protected function configure() {
-    $this->setName('npm-audit');
+    $this->setName('npm-audit')
+      ->addOption('command', 'c', InputOption::VALUE_NONE, 'Generate a Composer command');
   }
 
   /**
@@ -38,6 +41,61 @@ class NpmAuditCommand extends BaseCommand {
     }
 
     return $name;
+  }
+
+  /**
+   * @param \Symfony\Component\Console\Style\SymfonyStyle $io
+   * @param \stdClass $results
+   *
+   * @return int
+   */
+  private function printCommand(SymfonyStyle $io, stdClass $results) {
+    foreach ($results->advisories as $advisory) {
+      $io->writeln("composer require 'npm-asset/" . $advisory->module_name . ':' . $advisory->patched_versions . "' --update-with-dependencies");
+    }
+
+    return 0;
+  }
+
+  /**
+   * @param \Symfony\Component\Console\Style\SymfonyStyle $io
+   * @param \stdClass $results
+   *
+   * @return int
+   */
+  private function printTable(SymfonyStyle $io, stdClass $results) {
+    if (empty((array) $results->advisories)) {
+      $io->success('No known vulnerability.');
+
+      return 0;
+    }
+    else {
+      $table = [];
+      foreach ($results->advisories as $advisory) {
+        $table[] = [
+          $advisory->severity,
+          $advisory->title,
+          $advisory->module_name,
+          $advisory->vulnerable_versions,
+          $advisory->recommendation,
+          $advisory->url,
+        ];
+      }
+
+      $io->table(
+        [
+          'Severity',
+          'Title',
+          'Dependency',
+          'Vulnerable versions',
+          'Recommendation',
+          'URL',
+        ],
+        $table
+      );
+
+      return 1;
+    }
   }
 
   /**
@@ -78,37 +136,11 @@ class NpmAuditCommand extends BaseCommand {
     );
     $results = json_decode($response->getBody()->getContents());
 
-    if (empty((array) $results->advisories)) {
-      $io->success('No known vulnerability.');
-
-      return 0;
+    if ($input->getOption('command')) {
+      return $this->printCommand($io, $results);
+    } else {
+      return $this->printTable($io, $results);
     }
-    else {
-      $table = [];
-      foreach ($results->advisories as $advisory) {
-        $table[] = [
-          $advisory->severity,
-          $advisory->title,
-          $advisory->module_name,
-          $advisory->vulnerable_versions,
-          $advisory->recommendation,
-          $advisory->url,
-        ];
-      }
 
-      $io->table(
-        [
-          'Severity',
-          'Title',
-          'Dependency',
-          'Vulnerable versions',
-          'Recommendation',
-          'URL',
-        ],
-        $table
-      );
-
-      return 1;
-    }
   }
 }
