@@ -50,8 +50,13 @@ class NpmAuditCommand extends BaseCommand {
    * @return int
    */
   private function printCommand(SymfonyStyle $io, stdClass $results) {
+    $require = [];
     foreach ($results->advisories as $advisory) {
-      $io->writeln("composer require 'npm-asset/" . $advisory->module_name . ':' . $advisory->patched_versions . "' --update-with-dependencies");
+      $require[] = "'npm-asset/" . $advisory->module_name . ':' . $advisory->patched_versions . "'";
+    }
+
+    if (!empty($require)) {
+      $io->writeln('composer require ' . implode(' ', $require) . ' --update-with-dependencies');
     }
 
     return 0;
