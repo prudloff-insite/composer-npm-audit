@@ -131,6 +131,12 @@ class NpmAuditCommand extends BaseCommand {
       }
     }
 
+    if (empty($dependencies)) {
+      $io->warning('This project does not use any NPM package.');
+
+      return 0;
+    }
+
     $response = $client->post(
       'http://registry.npmjs.org/-/npm/v1/security/audits',
       [
