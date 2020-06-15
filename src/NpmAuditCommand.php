@@ -35,10 +35,9 @@ class NpmAuditCommand extends BaseCommand {
    *
    * @return string
    */
-  private static function revertName($name)
-  {
-    if (false !== strpos($name, '--')) {
-      $name = '@'.str_replace('--', '/', $name);
+  private static function revertName($name) {
+    if (FALSE !== strpos($name, '--')) {
+      $name = '@' . str_replace('--', '/', $name);
     }
 
     return $name;
