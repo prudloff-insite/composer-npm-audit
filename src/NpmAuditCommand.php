@@ -24,6 +24,7 @@ class NpmAuditCommand extends BaseCommand {
    */
   protected function configure() {
     $this->setName('npm-audit')
+      ->addOption('json', 'j', InputOption::VALUE_NONE, 'Display result as JSON')
       ->addOption('command', 'c', InputOption::VALUE_NONE, 'Generate a Composer command');
   }
 
@@ -141,7 +142,10 @@ class NpmAuditCommand extends BaseCommand {
     );
     $results = json_decode($response->getBody()->getContents());
 
-    if ($input->getOption('command')) {
+    if ($input->getOption('json')) {
+      return json_encode($results);
+    }
+    elseif ($input->getOption('command')) {
       return $this->printCommand($io, $results);
     } else {
       return $this->printTable($io, $results);
