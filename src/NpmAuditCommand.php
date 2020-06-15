@@ -143,11 +143,14 @@ class NpmAuditCommand extends BaseCommand {
     $results = json_decode($response->getBody()->getContents());
 
     if ($input->getOption('json')) {
-      return json_encode($results);
+      $io->write(json_encode($results));
+
+      return 0;
     }
     elseif ($input->getOption('command')) {
       return $this->printCommand($io, $results);
-    } else {
+    }
+    else {
       return $this->printTable($io, $results);
     }
 
