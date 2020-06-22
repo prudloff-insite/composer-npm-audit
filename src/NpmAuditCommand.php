@@ -5,6 +5,7 @@ namespace ComposerNpmAudit;
 use Composer\Command\BaseCommand;
 use GuzzleHttp\Client;
 use GuzzleHttp\RequestOptions;
+use Jean85\PrettyVersions;
 use PackageVersions\Versions;
 use stdClass;
 use Symfony\Component\Console\Input\InputInterface;
@@ -120,12 +121,12 @@ class NpmAuditCommand extends BaseCommand {
     $dependencies = [];
     foreach (Versions::VERSIONS as $package => $version) {
       $packageInfo = explode('/', $package);
-      $versionInfo = explode('@', $version);
+      $versionInfo = PrettyVersions::getVersion($package);
       if ($packageInfo[0] == 'npm-asset') {
         $name = $this->revertName($packageInfo[1]);
-        $requires[$name] = $versionInfo[0];
+        $requires[$name] = $versionInfo->getShortVersion();
         $dependencies[$name] = [
-          'version' => $versionInfo[0],
+          'version' => $versionInfo->getShortVersion(),
         ];
       }
     }
