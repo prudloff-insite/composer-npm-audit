@@ -7,7 +7,7 @@ use Composer\Plugin\Capability\CommandProvider;
 class NpmAuditCommandProvider implements CommandProvider {
 
   /**
-   * @inheritDoc
+   * @return \Composer\Command\BaseCommand[]|\ComposerNpmAudit\NpmAuditCommand[]
    */
   public function getCommands() {
     return [

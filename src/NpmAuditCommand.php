@@ -21,7 +21,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 class NpmAuditCommand extends BaseCommand {
 
   /**
-   *
+   * @return void
    */
   protected function configure() {
     $this->setName('npm-audit')

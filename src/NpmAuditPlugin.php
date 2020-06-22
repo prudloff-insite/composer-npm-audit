@@ -21,7 +21,8 @@ class NpmAuditPlugin implements PluginInterface, Capable {
   private $io;
 
   /**
-   * @inheritDoc
+   * @param \Composer\Composer $composer
+   * @param \Composer\IO\IOInterface $io
    */
   public function activate(Composer $composer, IOInterface $io) {
     $this->composer = $composer;
@@ -29,7 +30,7 @@ class NpmAuditPlugin implements PluginInterface, Capable {
   }
 
   /**
-   * @inheritDoc
+   * @return string[]
    */
   public function getCapabilities() {
     return [
