@@ -25,6 +25,7 @@ class NpmAuditCommand extends BaseCommand {
    */
   protected function configure() {
     $this->setName('npm-audit')
+      ->setDescription('Detect known vulnerable versions of NPM packages')
       ->addOption('json', 'j', InputOption::VALUE_NONE, 'Display result as JSON')
       ->addOption('command', 'c', InputOption::VALUE_NONE, 'Generate a Composer command');
   }
