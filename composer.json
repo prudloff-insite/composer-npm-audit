@@ -24,8 +24,13 @@
     }
   ],
   "require-dev": {
-    "composer/composer": "^1.9",
-    "symfony/var-dumper": "^5.0",
-    "npm-asset/js-yaml": "3.13.0"
+    "npm-asset/js-yaml": "3.13.0",
+    "symfony/var-dumper": "^4.4",
+    "composer/composer": "^1.10"
+  },
+  "config": {
+    "platform": {
+      "php": "7.1.3"
+    }
   }
 }
