@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "957cec80b4476d245eee7f3c83f94665",
+    "content-hash": "33ee31c60fb28b288aee2c9adfc994f7",
     "packages": [
         {
             "name": "composer/package-versions-deprecated",
@@ -773,6 +773,61 @@
                 "schema"
             ],
             "time": "2019-09-25T14:49:45+00:00"
+        },
+        {
+            "name": "npm-asset/argparse",
+            "version": "1.0.10",
+            "dist": {
+                "type": "tar",
+                "url": "https://registry.npmjs.org/argparse/-/argparse-1.0.10.tgz"
+            },
+            "require": {
+                "npm-asset/sprintf-js": "~1.0.2"
+            },
+            "type": "npm-asset",
+            "license": [
+                "MIT"
+            ]
+        },
+        {
+            "name": "npm-asset/esprima",
+            "version": "4.0.1",
+            "dist": {
+                "type": "tar",
+                "url": "https://registry.npmjs.org/esprima/-/esprima-4.0.1.tgz"
+            },
+            "type": "npm-asset",
+            "license": [
+                "BSD-2-Clause"
+            ]
+        },
+        {
+            "name": "npm-asset/js-yaml",
+            "version": "3.13.0",
+            "dist": {
+                "type": "tar",
+                "url": "https://registry.npmjs.org/js-yaml/-/js-yaml-3.13.0.tgz"
+            },
+            "require": {
+                "npm-asset/argparse": ">=1.0.7,<2.0.0",
+                "npm-asset/esprima": ">=4.0.0,<5.0.0"
+            },
+            "type": "npm-asset",
+            "license": [
+                "MIT"
+            ]
+        },
+        {
+            "name": "npm-asset/sprintf-js",
+            "version": "1.0.3",
+            "dist": {
+                "type": "tar",
+                "url": "https://registry.npmjs.org/sprintf-js/-/sprintf-js-1.0.3.tgz"
+            },
+            "type": "npm-asset",
+            "license": [
+                "BSD-3-Clause"
+            ]
         },
         {
             "name": "psr/container",

@@ -17,8 +17,15 @@
       "ComposerNpmAudit\\": "src/"
     }
   },
+  "repositories": [
+    {
+      "type": "composer",
+      "url": "https://asset-packagist.org"
+    }
+  ],
   "require-dev": {
     "composer/composer": "^1.9",
-    "symfony/var-dumper": "^5.0"
+    "symfony/var-dumper": "^5.0",
+    "npm-asset/js-yaml": "3.13.0"
   }
 }

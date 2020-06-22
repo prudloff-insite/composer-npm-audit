@@ -111,7 +111,13 @@ class NpmAuditCommand extends BaseCommand {
    * @return int
    */
   protected function execute(InputInterface $input, OutputInterface $output) {
-    $vendorDir = $this->getComposer()->getConfig()->get('vendor-dir');
+    $composer = $this->getComposer(FALSE);
+    if (isset($composer)) {
+      $vendorDir = $this->getComposer()->getConfig()->get('vendor-dir');
+    }
+    else {
+      $vendorDir = __DIR__ . '/../vendor/';
+    }
     require $vendorDir . '/autoload.php';
 
     $client = new Client();
