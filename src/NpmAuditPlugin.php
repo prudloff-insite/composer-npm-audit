@@ -25,4 +25,20 @@ class NpmAuditPlugin implements PluginInterface, Capable {
       CommandProvider::class => NpmAuditCommandProvider::class,
     ];
   }
+
+  /**
+   * @param \Composer\Composer $composer
+   * @param \Composer\IO\IOInterface $io
+   */
+  public function deactivate(Composer $composer, IOInterface $io) {
+
+  }
+
+  /**
+   * @param \Composer\Composer $composer
+   * @param \Composer\IO\IOInterface $io
+   */
+  public function uninstall(Composer $composer, IOInterface $io) {
+
+  }
 }
