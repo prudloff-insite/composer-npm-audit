@@ -1,6 +1,6 @@
 {
   "name": "insite/composer-npm-audit",
-  "license": "proprietary",
+  "license": "GPL-2.0-or-later",
   "type": "composer-plugin",
   "description": "Composer plugin that looks for vulnerabilities in NPM packages",
   "require": {
