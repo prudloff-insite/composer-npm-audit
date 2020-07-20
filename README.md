@@ -9,7 +9,7 @@ It provides a simple way to know if your NPM dependencies have known vulnerabili
 ## Install
 
 ```shell script
-composer require npm-audit
+composer require insite/composer-npm-audit
 ```
 
 ## Usage
