@@ -6,6 +6,7 @@ use Composer\Command\BaseCommand;
 use GuzzleHttp\Client;
 use GuzzleHttp\RequestOptions;
 use Jean85\PrettyVersions;
+use OutOfBoundsException;
 use PackageVersions\Versions;
 use stdClass;
 use Symfony\Component\Console\Input\InputInterface;
@@ -127,14 +128,21 @@ class NpmAuditCommand extends BaseCommand {
     $requires = [];
     $dependencies = [];
     foreach (Versions::VERSIONS as $package => $version) {
-      $packageInfo = explode('/', $package);
-      $versionInfo = PrettyVersions::getVersion($package);
-      if ($packageInfo[0] == 'npm-asset') {
-        $name = $this->revertName($packageInfo[1]);
-        $requires[$name] = $versionInfo->getShortVersion();
-        $dependencies[$name] = [
-          'version' => $versionInfo->getShortVersion(),
-        ];
+      try {
+        $packageInfo = explode('/', $package);
+        $versionInfo = PrettyVersions::getVersion($package);
+
+        if ($packageInfo[0] == 'npm-asset') {
+          $name = $this->revertName($packageInfo[1]);
+          $requires[$name] = $versionInfo->getShortVersion();
+          $dependencies[$name] = [
+            'version' => $versionInfo->getShortVersion(),
+          ];
+        }
+      } catch (OutOfBoundsException $e) {
+        if ($io->isDebug()) {
+          $io->warning($package . 'is not installed');
+        }
       }
     }
 
