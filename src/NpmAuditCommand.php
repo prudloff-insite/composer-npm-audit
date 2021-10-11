@@ -153,7 +153,7 @@ class NpmAuditCommand extends BaseCommand {
     }
 
     $response = $client->post(
-      'http://registry.npmjs.org/-/npm/v1/security/audits',
+      'https://registry.npmjs.org/-/npm/v1/security/audits',
       [
         RequestOptions::BODY => json_encode([
           'dependencies' => $dependencies,
