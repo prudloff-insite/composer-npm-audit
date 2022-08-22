@@ -20,7 +20,7 @@ class NpmAuditPlugin implements PluginInterface, Capable {
   /**
    * @return string[]
    */
-  public function getCapabilities() {
+  public function getCapabilities(): array {
     return [
       CommandProvider::class => NpmAuditCommandProvider::class,
     ];

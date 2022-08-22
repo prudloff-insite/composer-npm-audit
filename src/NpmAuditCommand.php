@@ -40,7 +40,7 @@ class NpmAuditCommand extends BaseCommand {
    *
    * @return string
    */
-  private static function revertName($name) {
+  private static function revertName($name): string {
     if (FALSE !== strpos($name, '--')) {
       $name = '@' . str_replace('--', '/', $name);
     }
@@ -49,50 +49,49 @@ class NpmAuditCommand extends BaseCommand {
   }
 
   /**
-   * @param \Symfony\Component\Console\Style\SymfonyStyle $io
+   * @param \Symfony\Component\Console\Style\SymfonyStyle $output
    * @param \stdClass $results
    *
    * @return int
    */
-  private function printCommand(SymfonyStyle $io, stdClass $results) {
+  private function printCommand(SymfonyStyle $output, stdClass $results): int {
     $require = [];
     foreach ($results->advisories as $advisory) {
       $require[] = "'npm-asset/" . $advisory->module_name . ':' . $advisory->patched_versions . "'";
     }
 
     if (!empty($require)) {
-      $io->writeln('composer require ' . implode(' ', $require) . ' --update-with-dependencies');
+      $output->writeln('composer require ' . implode(' ', $require) . ' --update-with-dependencies');
     }
 
     return 0;
   }
 
   /**
-   * @param \Symfony\Component\Console\Style\SymfonyStyle $io
+   * @param \Symfony\Component\Console\Style\SymfonyStyle $output
    * @param \stdClass $results
    *
    * @return int
    */
-  private function printTable(SymfonyStyle $io, stdClass $results) {
+  private function printTable(SymfonyStyle $output, stdClass $results): int {
     if (empty((array) $results->advisories)) {
-      $io->success('No known vulnerability.');
+      $output->success('No known vulnerability.');
 
       return 0;
     }
-    else {
-      $table = [];
-      foreach ($results->advisories as $advisory) {
-        $table[] = [
-          $advisory->severity,
-          $advisory->title,
-          $advisory->module_name,
-          $advisory->vulnerable_versions,
-          $advisory->recommendation,
-          $advisory->url,
-        ];
-      }
 
-      $io->table(
+    $table = [];
+    foreach ($results->advisories as $advisory) {
+      $table[] = [
+        $advisory->severity,
+        $advisory->title,
+        $advisory->module_name,
+        $advisory->vulnerable_versions,
+        $advisory->recommendation,
+        $advisory->url,
+      ];
+    }
+    $output->table(
         [
           'Severity',
           'Title',
@@ -105,7 +104,8 @@ class NpmAuditCommand extends BaseCommand {
       );
 
       return 1;
-    }
+
+
   }
 
   /**
@@ -113,6 +113,7 @@ class NpmAuditCommand extends BaseCommand {
    * @param \Symfony\Component\Console\Output\OutputInterface $output
    *
    * @return int
+   * @noinspection PhpMissingParentCallCommonInspection
    */
   protected function execute(InputInterface $input, OutputInterface $output): int {
     $composer = $this->getComposer(FALSE);
@@ -125,7 +126,7 @@ class NpmAuditCommand extends BaseCommand {
     require $vendorDir . '/autoload.php';
 
     $client = new Client();
-    $io = new SymfonyStyle($input, $output);
+    $output = new SymfonyStyle($input, $output);
 
     $requires = [];
     $dependencies = [];
@@ -142,14 +143,14 @@ class NpmAuditCommand extends BaseCommand {
           ];
         }
       } catch (OutOfBoundsException $e) {
-        if ($io->isDebug()) {
-          $io->warning($package . 'is not installed');
+        if ($output->isDebug()) {
+          $output->warning($package . 'is not installed');
         }
       }
     }
 
     if (empty($dependencies)) {
-      $io->warning('This project does not use any NPM package.');
+      $output->warning('This project does not use any NPM package.');
 
       return 0;
     }
@@ -166,15 +167,15 @@ class NpmAuditCommand extends BaseCommand {
     $results = json_decode($response->getBody()->getContents());
 
     if ($input->getOption('json')) {
-      $io->write(json_encode($results));
+      $output->write(json_encode($results));
 
       return 0;
     }
     elseif ($input->getOption('command')) {
-      return $this->printCommand($io, $results);
+      return $this->printCommand($output, $results);
     }
     else {
-      return $this->printTable($io, $results);
+      return $this->printTable($output, $results);
     }
 
   }
