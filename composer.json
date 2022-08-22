@@ -4,7 +4,7 @@
   "type": "composer-plugin",
   "description": "Composer plugin that looks for vulnerabilities in NPM packages",
   "require": {
-    "composer-plugin-api": "^1.1|^2.0",
+    "composer-plugin-api": "^2.0",
     "guzzlehttp/guzzle": "^6.4",
     "ext-json": "*",
     "jean85/pretty-package-versions": "^1.3"
