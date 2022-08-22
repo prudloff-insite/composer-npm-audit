@@ -3,11 +3,11 @@
 namespace ComposerNpmAudit;
 
 use Composer\Command\BaseCommand;
+use Composer\InstalledVersions;
 use GuzzleHttp\Client;
 use GuzzleHttp\RequestOptions;
 use Jean85\PrettyVersions;
 use OutOfBoundsException;
-use PackageVersions\Versions;
 use stdClass;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -112,7 +112,7 @@ class NpmAuditCommand extends BaseCommand {
    *
    * @return int
    */
-  protected function execute(InputInterface $input, OutputInterface $output) {
+  protected function execute(InputInterface $input, OutputInterface $output): int {
     $composer = $this->getComposer(FALSE);
     if (isset($composer)) {
       $vendorDir = $this->getComposer()->getConfig()->get('vendor-dir');
@@ -127,7 +127,7 @@ class NpmAuditCommand extends BaseCommand {
 
     $requires = [];
     $dependencies = [];
-    foreach (Versions::VERSIONS as $package => $version) {
+    foreach (InstalledVersions::getInstalledPackagesByType('npm-asset') as $package) {
       try {
         $packageInfo = explode('/', $package);
         $versionInfo = PrettyVersions::getVersion($package);
