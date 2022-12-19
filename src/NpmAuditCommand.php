@@ -114,6 +114,7 @@ class NpmAuditCommand extends BaseCommand {
    *
    * @return int
    * @noinspection PhpMissingParentCallCommonInspection
+   * @throws \GuzzleHttp\Exception\GuzzleException
    */
   protected function execute(InputInterface $input, OutputInterface $output): int {
     $composer = $this->getComposer(FALSE);
