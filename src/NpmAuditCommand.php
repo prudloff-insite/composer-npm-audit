@@ -9,10 +9,10 @@ use GuzzleHttp\RequestOptions;
 use Jean85\PrettyVersions;
 use OutOfBoundsException;
 use stdClass;
+use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Style\SymfonyStyle;
 
 /**
  * Class NpmAuditCommand
@@ -49,12 +49,12 @@ class NpmAuditCommand extends BaseCommand {
   }
 
   /**
-   * @param \Symfony\Component\Console\Style\SymfonyStyle $output
+   * @param OutputInterface $output
    * @param \stdClass $results
    *
    * @return int
    */
-  private function printCommand(SymfonyStyle $output, stdClass $results): int {
+  private function printCommand(OutputInterface $output, stdClass $results): int {
     $require = [];
     foreach ($results->advisories as $advisory) {
       $require[] = "'npm-asset/" . $advisory->module_name . ':' . $advisory->patched_versions . "'";
@@ -68,21 +68,21 @@ class NpmAuditCommand extends BaseCommand {
   }
 
   /**
-   * @param \Symfony\Component\Console\Style\SymfonyStyle $output
+   * @param OutputInterface $output
    * @param \stdClass $results
    *
    * @return int
    */
-  private function printTable(SymfonyStyle $output, stdClass $results): int {
+  private function printTable(OutputInterface $output, stdClass $results): int {
     if (empty((array) $results->advisories)) {
-      $output->success('No known vulnerability.');
+      $output->writeln('<info>No known vulnerability.</info>');
 
       return 0;
     }
 
-    $table = [];
+    $rows = [];
     foreach ($results->advisories as $advisory) {
-      $table[] = [
+      $rows[] = [
         $advisory->severity,
         $advisory->title,
         $advisory->module_name,
@@ -91,21 +91,20 @@ class NpmAuditCommand extends BaseCommand {
         $advisory->url,
       ];
     }
-    $output->table(
-        [
-          'Severity',
-          'Title',
-          'Dependency',
-          'Vulnerable versions',
-          'Recommendation',
-          'URL',
-        ],
-        $table
-      );
+    $table = new Table($output);
 
-      return 1;
+    $table->setHeaders([
+      'Severity',
+      'Title',
+      'Dependency',
+      'Vulnerable versions',
+      'Recommendation',
+      'URL',
+    ]);
+    $table->setRows($rows);
+    $table->render();
 
-
+    return 1;
   }
 
   /**
@@ -127,7 +126,6 @@ class NpmAuditCommand extends BaseCommand {
     require $vendorDir . '/autoload.php';
 
     $client = new Client();
-    $output = new SymfonyStyle($input, $output);
 
     $requires = [];
     $dependencies = [];
@@ -145,13 +143,13 @@ class NpmAuditCommand extends BaseCommand {
         }
       } catch (OutOfBoundsException $e) {
         if ($output->isDebug()) {
-          $output->warning($package . 'is not installed');
+          $output->writeln('<comment>' . $package . 'is not installed</comment>');
         }
       }
     }
 
     if (empty($dependencies)) {
-      $output->warning('This project does not use any NPM package.');
+      $output->writeln('<comment>This project does not use any NPM package.</comment>');
 
       return 0;
     }
