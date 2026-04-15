@@ -26,7 +26,7 @@
   "require-dev": {
     "npm-asset/js-yaml": "3.13.0",
     "symfony/var-dumper": "^6.4",
-    "composer/composer": "^1.10"
+    "composer/composer": "^2.2"
   },
   "config": {
     "platform": {
