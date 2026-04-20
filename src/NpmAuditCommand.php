@@ -24,7 +24,7 @@ class NpmAuditCommand extends BaseCommand {
   /**
    * @return void
    */
-  protected function configure() {
+  protected function configure(): void {
     parent::configure();
 
     $this->setName('npm-audit')
@@ -41,7 +41,7 @@ class NpmAuditCommand extends BaseCommand {
    * @return string
    */
   private static function revertName($name): string {
-    if (FALSE !== strpos($name, '--')) {
+    if (str_contains($name, '--')) {
       $name = '@' . str_replace('--', '/', $name);
     }
 
@@ -116,9 +116,9 @@ class NpmAuditCommand extends BaseCommand {
    * @throws \GuzzleHttp\Exception\GuzzleException
    */
   protected function execute(InputInterface $input, OutputInterface $output): int {
-    $composer = $this->getComposer(FALSE);
+    $composer = $this->tryComposer();
     if (isset($composer)) {
-      $vendorDir = $this->getComposer()->getConfig()->get('vendor-dir');
+      $vendorDir = $this->requireComposer()->getConfig()->get('vendor-dir');
     }
     else {
       $vendorDir = __DIR__ . '/../vendor/';
@@ -137,9 +137,9 @@ class NpmAuditCommand extends BaseCommand {
           $name = $this->revertName($packageInfo[1]);
           $dependencies[$name][] = $versionInfo->getShortVersion();
         }
-      } catch (OutOfBoundsException $e) {
+      } catch (OutOfBoundsException) {
         if ($output->isDebug()) {
-          $output->writeln('<comment>' . $package . 'is not installed</comment>');
+          $output->writeln('<comment>' . $package . ' is not installed</comment>');
         }
       }
     }
