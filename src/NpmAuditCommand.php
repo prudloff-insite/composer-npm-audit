@@ -56,8 +56,8 @@ class NpmAuditCommand extends BaseCommand {
    */
   private function printCommand(OutputInterface $output, stdClass $results): int {
     $require = [];
-    foreach ($results->advisories as $advisory) {
-      $require[] = "'npm-asset/" . $advisory->module_name . ':' . $advisory->patched_versions . "'";
+    foreach ($results as $package => $advisories) {
+      $require[] = "'npm-asset/" . $package . "'";
     }
 
     if (!empty($require)) {
@@ -74,22 +74,23 @@ class NpmAuditCommand extends BaseCommand {
    * @return int
    */
   private function printTable(OutputInterface $output, stdClass $results): int {
-    if (empty((array) $results->advisories)) {
+    if (empty((array) $results)) {
       $output->writeln('<info>No known vulnerability.</info>');
 
       return 0;
     }
 
     $rows = [];
-    foreach ($results->advisories as $advisory) {
-      $rows[] = [
-        $advisory->severity,
-        $advisory->title,
-        $advisory->module_name,
-        $advisory->vulnerable_versions,
-        $advisory->recommendation,
-        $advisory->url,
-      ];
+    foreach ($results as $package => $advisories) {
+      foreach ($advisories as $advisory) {
+        $rows[] = [
+          $advisory->severity,
+          $advisory->title,
+          $package,
+          $advisory->vulnerable_versions,
+          $advisory->url,
+        ];
+      }
     }
     $table = new Table($output);
 
@@ -98,7 +99,6 @@ class NpmAuditCommand extends BaseCommand {
       'Title',
       'Dependency',
       'Vulnerable versions',
-      'Recommendation',
       'URL',
     ]);
     $table->setRows($rows);
@@ -127,7 +127,6 @@ class NpmAuditCommand extends BaseCommand {
 
     $client = new Client();
 
-    $requires = [];
     $dependencies = [];
     foreach (InstalledVersions::getInstalledPackagesByType('npm-asset') as $package) {
       try {
@@ -136,10 +135,7 @@ class NpmAuditCommand extends BaseCommand {
 
         if ($packageInfo[0] == 'npm-asset') {
           $name = $this->revertName($packageInfo[1]);
-          $requires[$name] = $versionInfo->getShortVersion();
-          $dependencies[$name] = [
-            'version' => $versionInfo->getShortVersion(),
-          ];
+          $dependencies[$name][] = $versionInfo->getShortVersion();
         }
       } catch (OutOfBoundsException $e) {
         if ($output->isDebug()) {
@@ -155,12 +151,9 @@ class NpmAuditCommand extends BaseCommand {
     }
 
     $response = $client->post(
-      'https://registry.npmjs.org/-/npm/v1/security/audits',
+      'https://registry.npmjs.org/-/npm/v1/security/advisories/bulk',
       [
-        RequestOptions::BODY => json_encode([
-          'dependencies' => $dependencies,
-          'requires' => $requires,
-        ]),
+        RequestOptions::JSON => $dependencies,
       ]
     );
     $results = json_decode($response->getBody()->getContents());
