@@ -7,7 +7,7 @@
     "composer-plugin-api": "^2.0",
     "guzzlehttp/guzzle": "^6.4||^7.5",
     "ext-json": "*",
-    "jean85/pretty-package-versions": "^1.3"
+    "jean85/pretty-package-versions": "^2.1"
   },
   "extra": {
     "class": "ComposerNpmAudit\\NpmAuditPlugin"
